@@ -1,0 +1,14 @@
+{#
+//    ----------------------------------------
+//      Status
+//    ----------------------------------------
+#}
+{% set style = settings.settings[col.handle].statusStyle is defined and settings.settings[col.handle].statusStyle is not empty ? settings.settings[col.handle].statusStyle : 'dot' %}
+{% switch(style) %}
+    {% case 'dot' %}
+        <span class="status {{entry.getStatus('name')}}"></span>
+    {% case 'label' %}
+        {{entry.getStatus('name') | default('-') | capitalize }}
+    {% case 'dot_label' %}
+        <span class="status {{entry.getStatus('name')}}"></span>{{entry.getStatus('name') | default('-') | capitalize }}
+{% endswitch %}

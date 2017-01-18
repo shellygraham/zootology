@@ -1,0 +1,23 @@
+{#
+ # Pages template
+ # ---------------
+ #}
+
+{% extends "_layout" %}
+{% set metaDescription = entry.metaDescription %}
+{% set seoPageTitle = entry.seoPageTitle %}
+{% set title = entry.title %}
+
+{% block content %}
+	<div class="breadcrumb-container">
+		<div class="container">
+			<ul class="breadcrumbs">
+				<li><a class="inverse" href="/">home</a></li>
+				<li>{{ entry.title | lower }}</li>
+			</ul>
+		</div>
+	</div>
+	<div class="container big-pad-bottom">
+		{% include 'parts/_content-blocks.html' %}
+	</div>
+{% endblock %}

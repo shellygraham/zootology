@@ -1,0 +1,35 @@
+{% import "_includes/forms" as forms %}
+
+
+<h1>{{"General Plugin Settings"|t}}</h1>
+
+<p>
+	<label for="zenbu_nav_label">{{"Label for Top Navigation/Headers"|t}}</label>
+	{{ forms.text({
+		id: 		"zenbu_nav_label",
+		label:      "Label for Top Navigation/Headers"|t,
+		name:       'nav_label',
+		value:		settings.nav_label,
+		placeholder: "Default: Zenbu"|t,
+	}) }}
+</p>
+
+<p>
+	{{ forms.checkbox({
+		id: 		"redirect_to_zenbu_label",
+		label:      "Redirect to Zenbu after saving entry"|t,
+		name:       'redirect_to_zenbu',
+		value:		'y',
+		checked:    settings.redirect_to_zenbu
+	}) }}
+</p>
+
+<p>
+	{{ forms.checkbox({
+		id: 		"hide_entries_tab",
+		label:      "Hide Entries Tab in Control Panel"|t,
+		name:       'hide_entries_tab',
+		value:		'y',
+		checked:    settings.hide_entries_tab
+	}) }}
+</p>

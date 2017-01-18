@@ -1,0 +1,11 @@
+{% if nav_label is defined and nav_label is not empty %}
+$(document).ready(function (){
+   $("header#header").find("li#nav-zenbu a").text('{{nav_label|t}}');
+});
+{% endif %}
+
+{% if hide_entries_tab is defined and hide_entries_tab is not empty %}
+$(document).ready(function (){
+   $("header#header").find("li#nav-entries").remove();
+});
+{% endif %}

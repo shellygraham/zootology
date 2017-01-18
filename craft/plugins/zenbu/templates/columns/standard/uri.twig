@@ -1,0 +1,11 @@
+{#
+//    ----------------------------------------
+//      URI
+//    ----------------------------------------
+#}
+{% if entry.uri is empty %}
+{% elseif entry.uri == '__home__' %}
+    <a href="{{ siteUrl }}" target="_blank" class="uriLink"><span><i class="fa fa-home"></i></span> <i class="fa fa-external-link-square i-smaller"></i></a>
+{% else %}
+    <a href="{{entry.getUrl()}}" target="_blank" class="uriLink"><span>{{entry.uri}}</span> <i class="fa fa-external-link-square i-smaller"></i></a>
+{% endif %}

@@ -1,0 +1,51 @@
+{% extends "_layout" %}
+
+{% set category = craft.categories.slug(matches[1]).first %}
+
+{% set metaDescription = category.metaDescription %}
+{% set seoPageTitle = category.seoPageTitle %}
+{% set title = category.title %}
+
+{% block content %}
+	<div class="breadcrumb-container">
+		<div class="container">
+			<ul class="breadcrumbs">
+				<li><a class="inverse" href="/">home</a></li>
+				<li><a class="inverse" href="/products">products</a></li>
+				<li>{{ category.title | lower }}</li>
+			</ul>
+		</div>
+	</div>
+	<div class="hero-container">
+		{% if category.categoryImage | length %}
+			<img src="{{ category.categoryImage.first.url }}" alt=""/>
+		{% endif %}
+	</div>
+	<div class="container big-pad-bottom products">
+		<div class="row">
+			<div class="col-12 omega">
+				<h1>{{ category.title }}</h1>
+				{{ category.categoryPageContent }}
+			</div>
+		</div>
+	</div>
+	</main>
+	<div class="sub-products">
+
+	<div class="container big-pad-bottom">
+		<div class="row">
+			<div class="col-12 omega">
+                {% set subCategories = craft.categories.descendantOf(category) %}
+                {% if subCategories | length %}
+                  {% for subCat in subCategories %}
+                    {% include "parts/_cat-box.html" with { 'cat': subCat} %}
+                  {% endfor %}
+                {% else %}
+                  {% include "parts/_cat-box.html" with { 'cat': category} %}
+                {% endif %}
+			</div>
+		</div>
+	</div>
+</div>
+	
+{% endblock %}

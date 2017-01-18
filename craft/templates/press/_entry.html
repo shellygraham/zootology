@@ -1,0 +1,25 @@
+{% extends "_layout" %}
+{% set metaDescription = entry.metaDescription %}
+{% set seoPageTitle = entry.seoPageTitle %}
+{% set title = "Press" %}
+
+{% block content %}
+	<div class="breadcrumb-container">
+		<div class="container">
+			<ul class="breadcrumbs">
+				<li><a class="inverse" href="/">home</a></li>
+				<li>zoot press</li>
+			</ul>
+		</div>
+	</div>
+	<div class="container big-pad-bottom">
+		<article>
+			{% if entry.mainImage %}
+				<img src="{{ entry.mainImage.first.url }}" alt=""/>
+			{% endif %}
+			<h1>{{ entry.title }}</h1>
+			<p>Posted on {{ entry.postDate.format('F d, Y') }}</p>
+			{{ entry.body }}
+		</article>
+	</div>
+{% endblock %}

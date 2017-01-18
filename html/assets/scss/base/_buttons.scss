@@ -1,0 +1,118 @@
+button,
+input[type="submit"] {
+  @extend %button;
+  @include appearance(none);
+  border: none;
+  cursor: pointer;
+  user-select: none;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+a.arrow {
+	display: inline-block;
+	position: relative;
+	padding: 0 24px 0 30px;
+	line-height: 44px;
+	color: #fff;
+	background-color: $base-accent-color;
+    
+  &:after {
+  	content: '';
+  	position: absolute;
+  	height: 0;
+  	width: 0;
+  	border-style: solid;
+  	border-width: 22px 0 22px 22px;
+  	border-color: transparent $base-accent-color;
+  	right: -21px;
+  }
+
+  &:hover {
+  	background-color: #000;
+
+  	&:after {
+  		border-color: transparent #000;
+  	}
+  }
+}
+
+a.big-arrow {
+  display: inline-block;
+  position: relative;
+  padding: 0 44px 0 50px;
+  line-height: 72px;
+  color: #fff;
+  background-color: $base-accent-color;
+  font-size: 30px;
+    
+    &:after {
+      content: '';
+      position: absolute;
+      height: 0;
+      width: 0;
+      border-style: solid;
+      border-width: 36px 0 36px 36px;
+      border-color: transparent $base-accent-color;
+      right: -35px;
+    }
+
+    &:hover {
+      background-color: #000;
+
+      &:after {
+        border-color: transparent #000;
+      }
+    }
+
+  @include media($small-screen) {
+    padding: 0 24px 0 30px;
+    line-height: 44px;
+    font-size: 20px;
+
+    &:after {
+      border-width: 22px 0 22px 22px;
+      right: -21px;
+    }
+  }
+}
+
+a.big-arrow-blue {
+  display: inline-block;
+  position: relative;
+  padding: 0 44px 0 50px;
+  line-height: 72px;
+  color: #fff;
+  background-color: #489ae2;
+  font-size: 30px;
+    
+    &:after {
+      content: '';
+      position: absolute;
+      height: 0;
+      width: 0;
+      border-style: solid;
+      border-width: 36px 0 36px 36px;
+      border-color: transparent #489ae2;
+      right: -35px;
+    }
+
+    &:hover {
+      background-color: #000;
+
+      &:after {
+        border-color: transparent #000;
+      }
+    }
+
+  @include media($small-screen) {
+    padding: 0 24px 0 30px;
+    line-height: 44px;
+    font-size: 20px;
+
+    &:after {
+      border-width: 22px 0 22px 22px;
+      right: -21px;
+    }
+  }
+}

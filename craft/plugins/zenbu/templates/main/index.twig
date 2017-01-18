@@ -1,0 +1,58 @@
+{% extends "_layouts/cp" %}
+{% import "_includes/forms" as forms %}
+
+{% set title = nav_label|t %}
+
+{#
+//    ----------------------------------------
+//      Breadcrumbs
+//    ----------------------------------------
+#}
+{% set crumbs = [
+    { label: nav_label|t, url: url('zenbu') },
+    { label: "Entry Listing"|t, url: false }
+] %}
+
+{#
+//    ----------------------------------------
+//      Tabs
+//    ----------------------------------------
+#}
+{% set sectionId = craft.request.getParam('sectionId') %}
+{% set entryTypeId = craft.request.getParam('entryTypeId') %}
+{% set sectionIdParam = sectionId ? '?sectionId=' ~ sectionId : '' %}
+{% set entryTypeIdParam = entryTypeId ? '&entryTypeId=' ~ entryTypeId : '' %}
+{% set tabs = {
+    main: { label: "Entry Listing"|t, url: url('zenbu') ~ sectionIdParam ~ entryTypeIdParam },
+    displaySettings:    { label: "Display Settings"|t, url: url('zenbu/settings') ~ sectionIdParam ~ entryTypeIdParam },
+    manageSavedSearches:    { label: "Manage Saved Searches"|t, url: url('zenbu/searches') },
+} %}
+{% set selectedTab = 'main' %}
+
+{# Sidebar #}
+{% set sidebar %}
+    {% include "zenbu/main/sidebar" %}
+{% endset %}
+
+{% set content %}
+
+    {% include "zenbu/main/_filterFields" %}
+
+    {% include "zenbu/main/_filterForm" %}
+    
+    <a class="show-sidebar-button" title="Show sidebar"><i class="fa fa-expand fa-caret-right"></i> <i class="fa fa-list"></i></a>
+    
+    <div class="resultArea">
+        {% if storedFilterData is not defined or storedFilterData is empty %}
+            {% include "zenbu/main/results" %}
+        {% endif %}
+    </div>
+
+    {% include "zenbu/main/_deleteEntries" %}
+
+    <script type="text/javascript">
+        window.csrfTokenName = "{{ craft.config.csrfTokenName|e('js') }}";
+        window.csrfTokenValue = "{{ craft.request.csrfToken|e('js') }}";
+    </script>
+
+{% endset %}

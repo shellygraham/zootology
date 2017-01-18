@@ -1,0 +1,253 @@
+@import "compass";
+div#content
+{
+	button.submit
+	{
+		font-family: HelveticaNeue, sans-serif;
+		font-size: 100%;
+	}
+
+	div.clear
+	{
+		clear: both;
+	}
+
+	div.filters
+	{
+		table
+		{
+			tr
+			{
+				td
+				{
+					padding: 0 0.5em 0.5em 0;
+				}
+			}
+		}
+
+		div.section_select,
+		div.entryType_select
+		{
+			margin-bottom: 0.5em;
+		}
+
+		div.limit-and-orderby,
+		div.section-filter
+		{
+			div, span
+			{
+				display: -moz-inline-stack;
+			}
+		}
+
+		.limit-and-orderby
+		{
+			td
+			{
+				white-space: nowrap;
+			}
+		}
+	}
+
+	.show-sidebar-button
+	{
+		text-decoration: none;
+		position: absolute;
+		top: -30px;
+		left: -12px;
+		padding: 10px 10px 10px 0;
+		color: #555;
+	}
+
+	.sidebar
+	{
+		nav
+		{
+			overflow: hidden;
+		}
+
+		#saveSearch
+		{
+			button
+			{
+				margin-bottom: 5px; /* prevents sidebar's overflow scrollbars from appearing */
+			}
+		}
+	}
+}
+
+div.resultArea
+{
+	overflow: auto;
+	padding-left: 1px;
+	padding-bottom: 1px;
+
+	table.resultsTable
+	{
+		tbody
+		{
+			tr:hover
+			{
+				background: #f8f8f8;
+			}
+		}
+	}
+
+	.pagination
+	{
+		display: inline;
+		margin: 0 0 1em 0;
+		ul
+		{
+			li
+			{
+				float: left;
+
+				a, span
+				{
+					padding: 5px 10px;
+					display: block;
+					@include border-radius(3px);
+				}
+
+				a:hover
+				{
+					background: #f9f9f9;
+					text-decoration: none;
+				}
+
+				span
+				{
+					background: #f2f2f2;
+
+					&.result-text
+					{
+						margin-left: 10px;
+						background: none;
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Matrix display
+	 */
+	div.matrixField
+	{
+		overflow: auto;
+		border: 1px solid #eee;
+		padding: 5px 5px 0 5px;
+
+		div.titlebar
+		{
+			padding-left: 14px;
+		}
+	}
+
+	/**
+	 * Color display
+	 */
+	div.colorField
+	{
+		height: 30px;
+		width: 30px;
+		border-radius: 15px;
+	}
+
+	a.imageModal img
+	{
+		border-radius: 3px;
+	}
+
+	a.uriLink
+	{
+		span:hover
+		{
+			text-decoration: underline;
+		}
+
+		i.i-smaller
+		{
+			color: #ccc;
+			font-size: 80%;
+		}
+
+		&:hover
+		{
+			text-decoration: none;
+			i
+			{
+				color: inherit;
+			}
+		}
+	}
+}
+
+/**
+ * Add/remove filter buttons
+ */
+button.addFilterRule,
+button.removeFilterRule
+{
+	border: none;
+	background: none;
+	padding: 0;
+	margin: 0;
+	color: #ccc;
+	outline: none;
+
+	&:hover
+	{
+		color: #999;
+		cursor: pointer;
+	}
+}
+
+/**
+ * Sortable table
+ */
+tr.ui-sortable-helper
+{
+	background: #FFF;
+	border: 1px solid #eee;
+	padding-left: 10px;
+}
+
+.ui-state-highlight
+{
+	outline: 1px dashed #bbb;
+	background: #f0f0f0;
+}
+
+a.icon.move
+{
+	height: 1em;
+	display: flex;
+	text-decoration: none;
+}
+
+/**
+ * Modal - Fixes after modal is loaded
+ */
+
+iframe.imageiframe
+{
+	height: 100%;
+	width: 100%;
+}
+
+div.modal
+{
+	div.matrixField
+	{
+		overflow: auto;
+		border: 1px solid #eee;
+		padding: 5px 5px 0 5px;
+
+		div.titlebar
+		{
+			padding-left: 14px;
+		}
+	}
+}

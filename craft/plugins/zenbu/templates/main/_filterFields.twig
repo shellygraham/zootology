@@ -1,0 +1,64 @@
+<div class="filterFields" style="display: none">
+    <table>
+        <tr>
+        {% for sectionId, entryTypeArray in firstFilterOptions %}
+            {% for entryTypeId, options in entryTypeArray %}
+            <td class="firstFilter sectionId_{{sectionId}} entryTypeId_{{entryTypeId}}">
+                {{ forms.select({
+                    class: '',
+                    name: 'filter[0][1st]',
+                    options: options
+                }) }}
+            </td>
+            {% endfor %}
+        {% endfor %}
+
+        {% for index, options in secondFilterOptions %}
+            <td class="secondFilter index_{{index}}">
+            {{ forms.select({
+                class: '',
+                name: 'filter[0][2nd]',
+                options: options
+            }) }}
+            </td>
+        {% endfor %}
+
+            <td class="thirdFilter statusSelect">
+            {{ forms.select({
+                class: '',
+                name: 'filter[0][3rd]',
+                options: { null: 'any status'|t, live: 'live'|t, pending: 'pending'|t, expired: 'expired'|t, disabled: 'disabled'|t }
+            }) }}
+            </td>
+
+            <td class="thirdFilter generalInput">
+                <input type="text" class="text" name="filter[0][3rd]" />
+            </td>
+
+            <td class="thirdFilter datepicker">
+                <input type="text" class="text" name="filter[0][3rd]" />
+            </td>
+        <hr>
+        </tr>
+    </table>
+
+    {% for section in sections %}
+        {% if section.type != 'single' %}
+            <div class="btngroup new-entry-sectionId-{{section.id}}"><a class="btn add icon" href="{{cpUrl('/entries/' ~ section.handle ~ '/new')}}">{{ "New {section} Entry" | t({section: section.name})}}</a></div>                        
+        {% endif %}
+    {% endfor %}
+
+    <div class="btngroup new-entry-sectionId-0">
+        <div class="btn menubtn add icon savedSearchActions" role="button">{{ "New Entry"|t }}</div>
+        <div class="menu-dummy">
+            <ul>
+                {% for section in sections %}
+                    {% if section.type != 'single' %}
+                        <li><a href="{{cpUrl('/entries/' ~ section.handle ~ '/new')}}">{{section}}</a></li>               
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+</div>

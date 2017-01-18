@@ -1,0 +1,25 @@
+{% extends "_layout" %}
+
+{% set title = "Locations" %}
+
+{% set entries = craft.entries.section('storeLocations').order('title').limit(500) %}
+
+{% block content %}
+	<div class="container big-pad-bottom">
+
+	{% for entry in entries %}
+	    <div class="store-location">
+	    	<h4><a href="#" class="store-location-link" data-entry-id="{{ entry.id }}">{{ entry.title }}</a></h4>
+	    	{# {% if entry.comingSoon %}
+				<em class="red">Coming Soon</em><br/>
+			{% endif %} #}
+	        {{ entry.storeLocation.street1 }} {{ entry.storeLocation.street2 }}<br />
+	        {{ entry.storeLocation.city }}, {{ entry.storeLocation.state }} {{ entry.storeLocation.zip }}<br>
+	        {# <a href="https://www.google.com/maps/dir/Current+Location/{{ entry.storeLocation.lat }},{{ entry.storeLocation.lng }}">Get Directions</a> #}
+	        {% if entry.additionalInfo | length %}
+				{{ entry.additionalInfo }}
+			{% endif %}
+	    </div>
+	{% endfor %}
+	</div>
+{% endblock %}

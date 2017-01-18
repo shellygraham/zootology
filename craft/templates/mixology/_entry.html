@@ -1,0 +1,71 @@
+{% extends "_layout" %}
+{% set metaDescription = entry.metaDescription %}
+{% set seoPageTitle = entry.seoPageTitle %}
+{% set title = "Mixology" %}
+
+{% block content %}
+<div class="breadcrumb-container">
+	<div class="container">
+		<ul class="breadcrumbs">
+			<li><a class="inverse" href="/">home</a></li>
+			<li>mixology</li>
+		</ul>
+	</div>
+</div>
+<div class="recipe-wrapper">
+	<div class="container big-pad-bottom">
+
+		<div class="issuu-container" id="mixology-top" style="text-align: center;">
+			{{ entry.body }}
+		</div>
+		<div class="hero">
+			<h1>{{ entry.heroTitle }}<h1>
+			
+		</div>
+		<div class="cta-container">
+			<div class="row">
+				<div class="left-container col-5 shift-1">
+					<div class="drops-holder col-5">
+						<img src="{{ entry.dropsCtaImage.first.url }}" alt="CTA ZootDrops Image" />
+					</div>
+					<div class="drops-cta col-7">
+						{{ entry.dropsCtaText }}
+						<a href="http://www.zootology.com/products/zootdrops" class="big-arrow">Tell Me More</a>
+					</div>
+				</div>
+				<div class="right-container col-5">
+					<div class="zine-holder col-6">
+						<img src="{{ entry.zineCtaImage.first.url }}" alt="CTA Zine Image" />
+					</div>
+					<div class="zine-cta col-6">
+						{{ entry.zineCtaText }}
+						<a href="{{ entry.fullMixologyPdfFile.first.url }}" class="pdf-btn">Download PDF</a>
+					</div>				
+				</div>	
+			</div>
+		</div>
+	</div>
+	<div class="recipes">
+		<div class="recipe-tab">
+			<h4>Recipes</h4>
+			<div class="tab-list">
+				<ul>
+					{% for contentBlock in entry.contentBlocks %}
+						{% if contentBlock.type == "recipeEntry" %}
+							<li><a href="#{{ contentBlock.recipeTitle|replace(' ', '-') }}">{{ contentBlock.recipeTitle }}</a></li>
+						{% endif %}
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+		{% include 'parts/_content-blocks.html' %}
+	</div>
+	<div class="container back-to-top">
+		<div class="row">
+			<div class="col-8 shift-2 back-anchor">
+				<a href="#mixology-top">Back to top</a>
+			</div>
+		</div>
+	</div>
+</div>	
+{% endblock %}

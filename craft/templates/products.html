@@ -1,0 +1,104 @@
+{% extends "_layout" %}
+
+{% set category = craft.categories.slug(matches[1]).first %}
+{% set product = craft.entries.slug(matches[2]).first %}
+{% set relatedProducts = craft.entries.section('products').id('not '~product.id).order('RAND()').limit(4) %}
+
+{% set metaDescription = product.metaDescription %}
+{% set seoPageTitle = product.seoPageTitle %}
+{% set title = product.title %}
+
+{% block content %}
+	<div class="breadcrumb-container">
+		<div class="container">
+			<ul class="breadcrumbs">
+				<li><a class="inverse" href="/">home</a></li>
+				<li><a class="inverse" href="/products/">products</a></li>
+				<li><a class="inverse" href="/products/{{ category.slug }}">{{ category.title | lower }}</a></li>
+				<li>{{ product.title | lower }}</li>
+			</ul>
+		</div>		
+	</div>
+	<div class="container big-pad-bottom">
+		<div class="row">
+			<div class="col-5 text-center">
+				<img src="{{ product.productImage.first().url() }}" alt=""/>
+			</div>
+			<div class="col-7 omega">
+				<h1>{{ product.title }} <span class="margin-left"></span><a class="social inverse" target="_blank" href="https://www.facebook.com/Zootology/"><span class="icon-facebook"></span></a><a class="social inverse" target="_blank" href="https://twitter.com/Zootology"><span class="icon-twitter"></span></a><a class="social inverse" target="_blank" href="http://instagram.com/zootology"><span class="icon-instagram"></span></a></h1>
+				{{ product.productDescription }}
+
+                                <div class="states-avail states-main"><p>Available in:</p>
+                                  <ul>
+                                    {% for option in product.availableStates %}
+                                    <li>{{ option.label }}</li>
+                                    {% endfor %}
+                                  </ul>
+                                </div>
+
+				<p class="pad-top"><aside class=""><a class="arrow" href="/store-finder">find in store</a></aside></p>
+				<hr/>
+				<p class=""><a class="big upper" id="product-contact-form-link" href="#">Let us know what you think <span class="icon-right-arrow"></span></a></p>
+				<div id="product-contact-form-container" class="margin-left hidden">
+					{% macro errorList(errors) %}
+					    {% if errors %}
+					        <ul class="errors">
+					            {% for error in errors %}
+					                <li>{{ error }}</li>
+					            {% endfor %}
+					        </ul>
+					    {% endif %}
+					{% endmacro %}
+					
+					{% from _self import errorList %}
+					<div class="hidden green-well" id="product-contact-form-notice"></div>
+					<form id="product-contact-form" method="post" action="" accept-charset="UTF-8">
+					    {{ getCsrfInput() }}
+					    <input type="hidden" name="action" value="contactForm/sendMessage">
+					
+					    <label for="fromName">Name</label><br/>
+					    <input id="fromName" type="text" name="fromName" value="{% if message is defined %}{{ message.fromName }}{% endif %}"><br/>
+					    {% if message is defined %}{{ errorList(message.getErrors('fromName')) }}<br/>{% endif %}
+					
+					    <label for="fromEmail">Email</label><br/>
+					    <input id="fromEmail" type="text" name="fromEmail" value="{% if message is defined %}{{ message.fromEmail }}{% endif %}"><br/>
+					    {% if message is defined %}{{ errorList(message.getErrors('fromEmail')) }}<br/>{% endif %}
+					
+					    <input type="text" name="address" style="display: none"/>
+					
+					    <input id="subject" type="hidden" name="subject" value="{{ product.title }}">
+					
+					    <label for="message">Comment</label><br/>
+					    <textarea rows="5" cols="40" id="message" name="message[body]">{% if message is defined %}{{ message.message }}{% endif %}</textarea><br/>
+					    {% if message is defined %}{{ errorList(message.getErrors('message')) }}<br/>{% endif %}
+					    <input type="checkbox" name="message[Email Opt In]" value="yes" checked="checked"/> Let’s keep in touch. Notify me of new products and Zoots news.<br/>
+					    <br/>
+					    <input type="submit" value="Send">
+					</form>
+				</div>
+				<hr/>
+				<p class="big upper"><a href="#" id="product-info-link">Zoot Use <span class="icon-info"></span></a></p>
+				<div id="product-info" class="margin-left hidden">{{ product.usageInfo }}</div>
+				{% if product.ingredients | length %}
+				<hr/>
+				<p class=""><a class="big upper" id="product-ingredients-link" href="#">Ingredients <span class="icon-info"></span></a></p>
+				<div id="product-ingredients-container" class="margin-left hidden">{{ product.ingredients }}</div>
+				{% endif %}
+			</div>
+		</div>
+
+		<div class="text-separator test">MIGHT ALSO LIKE</div>
+		<div class="row">
+			{% for rp in relatedProducts %}
+				<div class="grid-3">
+					<a href="{{ url('products/' ~ rp.category.first.slug ~ '/' ~ rp.slug) }}" class="inverse">
+						{% if rp.productImage | length %}
+							<img src="{{ rp.productImage.first.url }}" alt=""/>
+						{% endif %}
+						<p class="text-center">{{ rp.title }} <span class="icon-right-arrow"></span></p>
+					</a>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+{% endblock %}

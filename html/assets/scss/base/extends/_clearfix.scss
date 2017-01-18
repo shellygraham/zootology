@@ -1,0 +1,5 @@
+@import "../../bourbon/addons/clearfix";
+
+%clearfix {
+  @include clearfix;
+}

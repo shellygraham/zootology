@@ -1,0 +1,277 @@
+<form action="{{ url('zenbu') }}" id="zenbuSearchFilter">
+    {{ getCsrfInput() }}
+    <div class="new-entry right">
+
+        {% for section in sections %}
+            {#
+            //    ----------------------------------------
+            //      Retrieve sectionId from filter cache,
+            //      if there's a filter cache
+            //    ----------------------------------------
+            #}
+            {% if storedFilterData is defined and storedFilterData is not empty %}
+                {% for filter in storedFilterData if filter.filterAttribute1 in ['sectionId'] %}
+                    {% set sectionId = filter.filterAttribute3 %}
+                {% endfor %}
+            {% endif %}
+
+            {#
+            //    ----------------------------------------
+            //      "New X Entry" button
+            //    ----------------------------------------
+            #}
+            {% if section.type != 'single' and section.id == sectionId %}
+                <div class="btngroup new-entry-sectionId-{{section.id}}"><a class="btn add icon" href="{{cpUrl('/entries/' ~ section.handle ~ '/new')}}">{{ "New {section} Entry" | t({section: section.name})}}</a></div>
+            {% endif %}
+        {% endfor %}
+
+        {% if sectionId == 0 %}
+            <div class="btngroup new-entry-sectionId-0">
+                <div class="btn menubtn add icon savedSearchActions" role="button">{{ "New Entry"|t }}</div>
+                <div class="menu">
+                    <ul>
+                        {% for section in sections %}
+                            {% if section.type != 'single' %}
+                                <li><a href="{{cpUrl('/entries/' ~ section.handle ~ '/new')}}">{{section}}</a></li>               
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    {# {{savedSearch|dbug}} #}
+    <div class="filters {% if storedFilterData is defined and storedFilterData is not empty %}has-cached-filter-data{% endif %}">
+        {% if storedFilterData is empty or storedFilterData is not defined %}
+
+            <div class="section-filter">
+                {{ forms.select({
+                    id:         'section_select',
+                    class:      'section_select',
+                    name:       'sectionId',
+                    options:    section_dropdown_options,
+                    value:      craft.request.getParam('sectionId')
+                }) }}
+
+                {% for sectionId, entryType in entryType_dropdown_options %}
+                    {{ forms.select({
+                        class:      'entryType_select sectionId_' ~ sectionId,
+                        name:       'entryTypeId',
+                        options:    entryType,
+                        value:      craft.request.getParam('entryTypeId')
+                    }) }}
+                {% endfor %}
+            </div>
+
+            <table>
+            <tr class="filter-params">
+                {% set sectionId = craft.request.getParam('sectionId', 0) %}
+                {% set entryTypeId = craft.request.getParam('entryTypeId', 0) %}
+                {% if (entryTypeId == 0 and sectionId != 0) or firstFilterOptions[sectionId][entryTypeId] is not defined %}
+                    {% set entryTypeId = craft.sections.getSectionById(sectionId).getEntryTypes()[0].id %}
+                {% endif %}
+                {% set firstFilterOptionsList = firstFilterOptions[sectionId][entryTypeId] %}
+                <td class="firstFilter sectionId_{{sectionId}} entryTypeId_{{entryTypeId}}">
+                    {{ forms.select({
+                        class: 'firstFilter sectionId_' ~ sectionId ~ ' entryTypeId_' ~ entryTypeId,
+                        name: 'filter[0][1st]',
+                        options: firstFilterOptionsList
+                    }) }}
+                </td>
+                <td class="secondFilter index_1">
+                    {{ forms.select({
+                        class: 'secondFilter index_1',
+                        name: 'filter[0][2nd]',
+                        options: secondFilterOptions[3]
+                    }) }}
+                </td>
+
+                <td class="thirdFilter">
+                    <input type="text" class="text thirdFilter" name="filter[0][3rd]" />
+                </td>
+                <td>
+                    <button type="button" class="addFilterRule"><i class="fa fa-plus-circle fa-2x"></i></button>
+                    <button type="button" class="removeFilterRule"><i class="fa fa-minus-circle fa-2x"></i></button>
+                </td>
+            </tr>
+            </table>
+
+            <table class="limit-and-orderby">
+                <tr>
+                    <td>
+                        {{ forms.select({
+                            name: 'limit',
+                            options: limit_options,
+                            value: craft.request.getParam('limit', 10)
+                        }) }}
+                    </td>
+                    <td>
+                        {{ forms.select({
+                            name: 'sort',
+                            options: sort_options,
+                            value: craft.request.getParam('sort', 'DESC')
+                        }) }}
+                    </td>
+                    <td>
+                        {{ forms.select({
+                            name: 'orderby',
+                            options: orderby_options,
+                            value: craft.request.getParam('orderby', 'postDate')
+                        }) }}
+                    </td>
+                    <td>
+                        <img src="{{ resourceUrl('images/spinner.gif') }}" alt="" style="display: none; border-top: 1px solid white" class="loading">
+                    </td>
+                </tr>
+            </table>
+
+        {% else %}
+            {#
+            //    ----------------------------------------
+            //      Cached filters
+            //    ----------------------------------------
+            #}
+            <div class="section-filter">
+            {% for filter in storedFilterData if filter.filterAttribute1 in ['sectionId'] %}
+                {% if filter.filterAttribute1 == 'sectionId' %}
+                    {{ forms.select({
+                        id:         'section_select',
+                        class:      'section_select',
+                        name:       'sectionId',
+                        options:    section_dropdown_options,
+                        value:      filter.filterAttribute3
+                    }) }}
+                    {% set sectionId = filter.filterAttribute3 %}
+                {% endif %}
+            {% endfor %}
+
+            {% for filter in storedFilterData if filter.filterAttribute1 in ['entryTypeId'] %}
+                {% if filter.filterAttribute3 %}
+                    {% for sectionId, entryType in entryType_dropdown_options %}
+                        {{ forms.select({
+                            class:      'entryType_select sectionId_' ~ sectionId,
+                            name:       'entryTypeId',
+                            options:    entryType,
+                            value:      filter.filterAttribute3
+                        }) }}
+                    {% endfor %}
+                    {% set entryTypeId = filter.filterAttribute3 %}
+                {% else %}
+                    {% for sectionId, entryType in entryType_dropdown_options %}
+                        {{ forms.select({
+                            class:      'entryType_select sectionId_' ~ sectionId,
+                            name:       'entryTypeId',
+                            options:    entryType,
+                            value:      craft.request.getParam('entryTypeId')
+                        }) }}
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+            </div>
+
+
+            <table>
+            {% for index, filter in storedFilterData if filter.filterAttribute1 not in ['sectionId', 'entryTypeId', 'limit', 'orderby'] %}
+                <tr class="filter-params">
+                    {% set entryTypeId = entryTypeId is not defined or entryTypeId is empty ? 0 : entryTypeId %}
+                    {% if entryTypeId == 0 and sectionId != 0 %}
+                        {% set entryTypeId = craft.sections.getSectionById(sectionId).getEntryTypes()[0].id %}
+                    {% endif %}
+                    <td class="firstFilter sectionId_{{sectionId}} entryTypeId_{{entryTypeId}}">
+                        {{ forms.select({
+                            class: 'firstFilter sectionId_' ~ sectionId ~ ' entryTypeId_' ~ entryTypeId,
+                            name: 'filter[' ~ (loop.index - 1) ~ '][1st]',
+                            options: firstFilterOptions[sectionId][entryTypeId],
+                            value: filter.filterAttribute1
+                        }) }}
+                    </td>
+                    <td class="secondFilter index_{{loop.index - 1}}">
+                            {% if filter.filterAttribute2 in ['is', 'isnot'] %}
+                                {% set secondFilterIndex = 1 %}
+                            {% elseif filter.filterAttribute2 in ['after', 'before', 'on'] %}
+                                {% set secondFilterIndex = 2 %}
+                            {% elseif filter.filterAttribute2 in ['contains', 'beginswith', 'endswith', 'doesnotcontain', 'doesnotbeginwith', 'doesnotendwith'] %}
+                                {% set secondFilterIndex = 3 %}
+                            {% elseif filter.filterAttribute2 in ['isempty', 'isnotempty'] %}
+                                {% set secondFilterIndex = 4 %}
+                            {% else %}
+                                {% set secondFilterIndex = 3 %}
+                            {% endif %}
+                        {{ forms.select({
+                            class: 'secondFilter index_1',
+                            name: 'filter[' ~ (loop.index - 1) ~ '][2nd]',
+                            options: secondFilterOptions[secondFilterIndex],
+                            value: filter.filterAttribute2
+                        }) }}
+                    </td>
+
+                        {% if filter.filterAttribute1 in ['postDate'] %}
+                            <td class="thirdFilter datepicker">
+                                <input type="text" class="text thirdFilter" name="filter[{{loop.index - 1}}][3rd]" value="{{filter.filterAttribute3}}"/>
+                            </td>
+                        {% elseif filter.filterAttribute1 in ['status'] %}
+                            <td class="thirdFilter statusSelect">
+                            {{ forms.select({
+                                class: '',
+                                name: 'filter[' ~ (loop.index - 1) ~ '][3rd]',
+                                options: { null: 'any status'|t, live: 'live'|t, pending: 'pending'|t, expired: 'expired'|t, disabled: 'disabled'|t },
+                                value: filter.filterAttribute3
+                            }) }}
+                            </td>
+                        {% else %}
+                            <td class="thirdFilter generalInput">
+                                <input type="text" class="text thirdFilter" name="filter[{{loop.index - 1}}][3rd]" value="{{filter.filterAttribute3}}"/>
+                            </td>
+                        {% endif %}
+
+                    <td>
+                        <button type="button" class="addFilterRule"><i class="fa fa-plus-circle fa-2x"></i></button>
+                        <button type="button" class="removeFilterRule"><i class="fa fa-minus-circle fa-2x"></i></button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </table>
+
+
+            <table class="limit-and-orderby">
+                <tr>
+                {% for filter in storedFilterData if filter.filterAttribute1 in ['limit', 'orderby']%}
+                        {% if filter.filterAttribute1 == 'limit' %}
+                            <td>
+                                {{ forms.select({
+                                    name: 'limit',
+                                    options: limit_options,
+                                    value: filter.filterAttribute2
+                                }) }}
+                            </td>
+                        {% endif %}
+                        {% if filter.filterAttribute1 == 'orderby' %}
+                            <td>
+                                {{ forms.select({
+                                    name: 'sort',
+                                    options: sort_options,
+                                    value: filter.filterAttribute2
+                                }) }}
+                            </td>
+                            <td>
+                                {{ forms.select({
+                                    name: 'orderby',
+                                    options: orderby_options,
+                                    value: filter.filterAttribute3
+                                }) }}
+                            </td>
+                            <td>
+                                <img src="{{ resourceUrl('images/spinner.gif') }}" alt="" style="display: none; border-top: 1px solid white" class="loading">
+                            </td>
+                        {% endif %}
+                {% endfor %}
+                </tr>
+            </table>
+        {% endif %}
+
+
+        <hr>
+
+    </div>
+</form>

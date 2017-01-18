@@ -1,0 +1,145 @@
+{% extends "_layout" %}
+
+{% set metaDescription = entry.metaDescription %}
+{% set seoPageTitle = entry.seoPageTitle %}
+{% set title = entry.title %}
+{% set data = craft.geo.info(false) %}
+{% set state = craft.geo.info.region_name %}
+
+{% set target = craft.request.getParam('search') %}
+{% set range = craft.request.getParam('radius') %}
+
+{% if state == "Colorado" %}
+	{% if target is empty %}
+		{% set target = "Denver, CO" %}	
+	{% endif %}
+{% elseif target is empty %}
+	{% set target = "Seattle, WA" %}
+{% endif %}
+
+{% if range is empty %}
+	{% set range = 25 %}
+{% endif %}
+
+{% set searchParams = {
+    target: target,
+    range: range,
+    units: "miles"
+} %}
+
+{% set mapOptions = {
+	height: 600,
+	zoom: 12,
+	draggable: true,
+        markerInfo: 'parts/_map-info',
+	markerOptions: {
+
+	},
+	infoWindowOptions: {
+	    maxWidth: 200
+	},
+} %}
+
+{% set entries = craft.entries.section('storeLocations').storeLocation(searchParams).order('distance').find() %}
+
+{% if entries is empty %}
+	{% set entries = null %}
+{% endif %}
+
+{% block content %}
+	<div class="breadcrumb-container">
+		<div class="container">
+			<ul class="breadcrumbs">
+				<li><a class="inverse" href="/">home</a></li>
+				<li>store finder</li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="container big-pad-bottom">
+		<div class="green-well">
+			<form class="store-finder" action="/store-finder" method="GET">
+				<span class="margin-right full-width-small"><span class="icon-location"></span> Find retail purveyors of Zoots near you: <input type="text" name="search" placeholder="zip code" size="10" {% if target is not empty %}value="{{ target }}"{% endif %} /></span>
+				<span class="margin-right full-width-small">Distance:
+				<select name="radius">
+					<option value="10" {% if range is defined and range == 10 %} selected="selected"{% endif %}>10 Miles</option>
+					<option value="25" {% if range is defined and range == 25 %} selected="selected"{% endif %}>25 Miles</option>
+					<option value="50" {% if range is defined and range == 50 %} selected="selected"{% endif %}>50 Miles</option>
+					<option value="75" {% if range is defined and range == 75 %} selected="selected"{% endif %}>75 Miles</option>
+					<option value="100" {% if range is defined and range == 100 %} selected="selected"{% endif %}>100 Miles</option>
+				</select>
+				</span>
+				<input type="submit" value="Search"/>
+			</form>
+		</div>
+
+		<div class="row">
+			<div class="col-8 omega float-right">
+                          {% if entries is empty   %}
+                            <iframe src='https://www.google.com/maps/embed/v1/place?key=AIzaSyBSbRbOBs7YcsKQp1ULlBDIao-Bp5r2ZxI&q={{ target}}' width='100%' height='600' frameborder='0' style='border:0' allowfullscreen></iframe>
+                          {% else %}
+		 	    {{ craft.smartMap.map(entries, mapOptions) }}
+                          {% endif %}
+			</div>
+			<div class="col-4 float-left" id="map-listings">
+				{% if target is not empty %}
+					{% if entries is not empty %}
+						<p class="">Showing results for "{{ target }}"</p>
+						{% for entry in entries %}
+						    <div class="store-location">
+						    	<h4><a href="#" class="store-location-link" data-entry-id="{{ entry.id }}">{{ entry.title }}</a></h4>
+						    	{# {% if entry.comingSoon %}
+									<em class="red">Coming Soon</em><br/>
+								{% endif %} #}
+						        {{ entry.storeLocation.street1 }} {{ entry.storeLocation.street2 }}<br />
+						        {{ entry.storeLocation.city }}, {{ entry.storeLocation.state }} {{ entry.storeLocation.zip }}<br>
+						        {# <a href="https://www.google.com/maps/dir/Current+Location/{{ entry.storeLocation.lat }},{{ entry.storeLocation.lng }}">Get Directions</a> #}
+						        {% if entry.additionalInfo | length %}
+									{{ entry.additionalInfo }}
+								{% endif %}
+						        <strong>{{ entry.storeLocation.distance | number_format(1) }} miles away</strong><br/>
+						    </div>
+						{% endfor %}
+					{% else %}
+					    <p class="">D'oh! We couldn't find any stores near "{{ target }}". Try increasing your distance for more search results.</p>
+					{% endif %}
+				{% else %}
+					<p class=""><span class="icon-location"></span> Enter your zip code above.</p>
+				{% endif %}
+			</div>
+		</div>
+
+<!--
+		<div class="margin-top gray-well">
+			<form class="newsletter-form" action="" method="POST">
+				<input type="hidden" name="action" value="mailchimpSubscribe/list/Subscribe">
+
+				<p>Can't find Zoots near you? We're sorry. But we're popping up in new stores all of the time.</p>
+				<p>Enter your email and we'll keep you posted on new stores and products.</p>
+
+				{% if mailchimpSubscribe is defined %}
+				  {% if (not mailchimpSubscribe.success) %}
+				    <p class="error">An error occured. Please try again.</p>
+				  {% endif %}
+
+				  {% if mailchimpSubscribe.success %}
+				    <p class="success">Thank you for signing up!</p>
+				  {% endif %}
+				{% endif %}
+
+				<div class="field-line">
+				  <label{% if (mailchimpSubscribe is defined) and (mailchimpSubscribe.errorCode=='1000') %} class="error"{% endif %}>Email:</label>
+				  <input type="text" name="email" value="{% if (mailchimpSubscribe is defined) and (not mailchimpSubscribe.success) %}{{ mailchimpSubscribe.values.email }}{% endif %}"/>
+				  <input type="submit" name="" value="Subscribe" />
+				</div>
+			</form>
+
+		</div>
+-->
+	</div>
+
+{% endblock %}
+
+{% block scripts %}
+	{% includeJsFile "/assets/js/store-finder.js" %}
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends "_layouts/cp" %}
+{% import "_includes/forms" as forms %}
+
+{% set title = 'Manage Saved Searches' %}
+
+{# Breadcrumbs #}
+{% set crumbs = [
+    { label: nav_label|t, url: url('zenbu') },
+    { label: "Manage Saved Searches"|t, url: url('zenbu/managesavedsearches') }
+] %}
+
+{# Tabs #}
+{% set sectionId = craft.request.getParam('sectionId') %}
+{% set entryTypeId = craft.request.getParam('entryTypeId') %}
+{% set sectionIdParam = sectionId ? '?sectionId=' ~ sectionId : '' %}
+{% set entryTypeIdParam = entryTypeId ? '&entryTypeId=' ~ entryTypeId : '' %}
+{% set tabs = {
+    main: { label: "Entry Listing"|t, url: url('zenbu') ~ sectionIdParam ~ entryTypeIdParam },
+    displaySettings:    { label: "Display Settings"|t, url: url('zenbu/settings') ~ sectionIdParam ~ entryTypeIdParam },
+    manageSavedSearches:    { label: "Manage Saved Searches"|t, url: url('zenbu/searches') },
+} %}
+{% set selectedTab = 'manageSavedSearches' %}
+
+{% set content %}
+
+{% if savedSearches is defined and savedSearches is not empty %}
+<form id="resultList" action="{{ actionUrl('zenbu/savedSearches/update') }}" method="post">
+	{{ getCsrfInput() }}
+	<table class="data fullwidth settingsTable">
+		<thead>
+			<tr>
+				<th></th>
+				<th></th>
+				<th>{{"Name"|t}}</th>
+			</tr>
+		</thead>
+		<tbody>
+		{% for search in savedSearches %}
+			<tr>
+				<td width="1%"><a class="move icon" title="Reorder" role="button">&nbsp;</a></td>
+				<td width="1%" class="not-sortable">
+					<input type="checkbox" name="searchIds[]" value="{{search.id}}">
+				</td>
+				<td class="not-sortable"><input type="text" class="text" name="search[{{search.id}}][label]" value="{{search.label | default('-')}}" size="100%" /></td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+
+	<div class="actionDisplay">
+		<br />
+
+		<button type="submit" class="btn submit"><span>{{"Update Saved Searches"|t}}</span><span style="display:none">{{"Updating"|t}} <i class="fa fa-spinner fa-pulse"></i></span></button>
+
+		<div class="btn menubtn savedSearchActions" role="button" style="display: none">{{ "Other Actions"|t }}</div>
+		<div class="menu">
+		    <ul>
+		        <li><a class="action" data-param="action" data-value="delete" data-confirm="{{"Do you really want to delete the selected saved searches?"|t}}" data-returnUrl="{{ url('zenbu/searches') }}">{{"Delete Selected Saved Searches"|t}}</a></li>
+		    </ul>
+		</div>
+	</div>
+
+</form>
+{% else %}
+
+	<p>{{"You do not have any saved searches."|t}}</p>
+	<a href="{{ url('zenbu') }}" class="btn submit">&laquo; {{"Return"|t}}</a>
+
+{% endif %}
+
+<script type="text/javascript">
+    window.csrfTokenName = "{{ craft.config.csrfTokenName|e('js') }}";
+    window.csrfTokenValue = "{{ craft.request.csrfToken|e('js') }}";
+</script>
+
+{% endset %}

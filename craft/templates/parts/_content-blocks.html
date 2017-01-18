@@ -1,0 +1,98 @@
+{% for contentBlock in entry.contentBlocks %}
+
+	{% if contentBlock.type == "leftImageBlock" %}
+		<div class="row">
+			<div class="text-center {% if contentBlock.libOneThirdWidthImage %}col-4{% else %}col-6{% endif %}">
+				<img src="{{ contentBlock.libImage.first.url }}" alt=""/>
+			</div>
+			<div class="{% if contentBlock.libOneThirdWidthImage %}col-8{% else %}col-6{% endif %} omega">
+				{{ contentBlock.libText }}
+			</div>
+		</div>
+	{% elseif contentBlock.type == "rightImageBlock" %}
+		<div class="row">
+			<div class="{% if contentBlock.ribOneThirdWidthImage %}col-8{% else %}col-6{% endif %}">
+				{{ contentBlock.ribText }}
+			</div>
+			<div class="text-center {% if contentBlock.ribOneThirdWidthImage %}col-4{% else %}col-6{% endif %} omega">
+				<img src="{{ contentBlock.ribImage.first.url }}" alt=""/>
+			</div>
+		</div>
+	{% elseif contentBlock.type == "fullWidthImage" %}
+		<img src="{{ contentBlock.fwiImage.first.url }}" alt=""/>
+	{% elseif contentBlock.type == "text34Width" %}
+		<section class="clearfix">
+			<div class="col-9">
+				{{ contentBlock.ttfwText }}
+			</div>
+		</section>
+	{% elseif contentBlock.type == "textFullWidth" %}
+		<section class="clearfix">
+			{{ contentBlock.tfwText }}
+		</section>
+	{% elseif contentBlock.type == "largeVideo" %}
+		<section class="col-8 shift-2">
+			<div class="flex-video">
+				<iframe width="853" height="480" src="//www.youtube.com/embed/{{contentBlock.lvYoutubeId}}?rel=0&color=white" frameborder="0" allowfullscreen></iframe>
+			</div>
+		</section>
+	{% elseif contentBlock.type == "retailersContact" %}
+		<section class="col-12 pad-top">
+			<h3>{{ contentBlock.rcHeadline }}</h3>
+			{{ contentBlock.rcContent }}
+			<br/>
+			{% include 'parts/_retailers-contact.html' %}
+		</section>
+	{% elseif contentBlock.type == "contactForm" %}
+		<section class="col-12 pad-top">
+			<h3>{{ contentBlock.cfHeadline }}</h3>
+			{{ contentBlock.cfContent }}
+			<br/>
+			{% include 'parts/_contact-form.html' %}
+		</section>
+
+	{% elseif contentBlock.type == "recipeEntry" %}
+	<div class="recipe-holder" id="{{ contentBlock.recipeTitle|replace(' ', '-') }}">
+		<div class="container">
+			<div class="row bigger-pad-btm">
+				<div class="col-8 shift-2">
+					<h2>{{ contentBlock.recipeTitle }}</h2>
+					<div class="recipe-container col-7">
+						{{ contentBlock.recipeText }}
+					</div>
+					{% if contentBlock.recipeImage %}
+						<div class="recipe-image col-5">
+							<img src="{{ contentBlock.recipeImage.first.url }}" alt=""/>
+						</div>
+					{% endif %}
+				</div>
+			</div>
+			{% if contentBlock.recipeAuthor %}
+				<div class="row">
+					<div class="col-8 shift-2">
+						<div class="recipe-author col-7">
+							{{ contentBlock.recipeAuthor }}
+						</div>
+						<div class="recipe-author-image col-3 shift-1">
+							<div class="img-container">
+								<img src="{{ contentBlock.recipeAuthorImage.first.url }}" alt=""/>
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endif %}
+			{% if contentBlock.recipeDownload.first.url %}
+			<div class="row test">
+				<div class="col-8 shift-2">
+					<div class="recipe-download col-7">
+						<a href="{{ contentBlock.recipeDownload.first.url }}">Download Recipe PDF</a>
+					</div>
+				</div>
+			</div>
+			{% endif %}
+		</div>
+	</div>
+	{% endif %}
+
+
+{% endfor %}

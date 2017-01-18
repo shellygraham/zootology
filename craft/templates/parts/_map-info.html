@@ -1,0 +1,14 @@
+<div>
+	<strong class="big">{{ element.title }}</strong><br/>
+	{# {% if element.comingSoon %}
+		<em class="red">Coming Soon</em><br/>
+	{% endif %} #}
+	{{ element.storeLocation.street1 }}<br/>
+	{{ element.storeLocation.city }}, {{ element.storeLocation.state }} {{ element.storeLocation.zip }}
+	<br/>
+	<a href="https://www.google.com/maps/dir/Current+Location/{{ element.storeLocation.lat }},{{ element.storeLocation.lng }}">Get Directions</a>
+	{% if element.additionalInfo | length %}
+		<br/>
+		{{ element.additionalInfo }}
+	{% endif %}
+</div>

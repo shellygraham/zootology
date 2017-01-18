@@ -1,0 +1,67 @@
+{% extends "_layout" %}
+
+{% set metaDescription = entry.metaDescription %}
+{% set seoPageTitle = entry.seoPageTitle %}
+{% set title = entry.title %}
+
+{% block content %}
+	<div class="container big-pad-bottom">
+		<ul class="breadcrumbs">
+			<li><a class="inverse" href="/">home</a></li>
+			<li>blog</li>
+		</ul>
+		<div class="gray-well">
+			<form class="newsletter-form" action="" method="POST">
+				<input type="hidden" name="action" value="mailchimpSubscribe/list/Subscribe">
+
+				<p>ZootFans! Follow us on <a href="https://www.facebook.com/Zootology/" target="_blank">Facebook</a>, <a href="https://twitter.com/Zootology">Twitter</a> and <a href="http://instagram.com/zootology">Instagram</a>.</p>
+				<p>Give us your email and we'll keep you posted on new products and ZootNews.</p>
+
+				{% if mailchimpSubscribe is defined %}
+				  {% if (not mailchimpSubscribe.success) %}
+				    {% include 'parts/_signup-error.html' %}
+				  {% endif %}
+
+				  {% if mailchimpSubscribe.success %}
+				    {% include 'parts/_signup-success.html' %}
+				  {% endif %}
+				{% endif %}
+
+				<div class="field-line">
+				  <label{% if (mailchimpSubscribe is defined) and (mailchimpSubscribe.errorCode=='1000') %} class="error"{% endif %}>Email:</label>
+				  <input type="text" name="email" value="{% if (mailchimpSubscribe is defined) and (not mailchimpSubscribe.success) %}{{ mailchimpSubscribe.values.email }}{% endif %}"/>
+				  <input type="submit" name="" value="Subscribe" />
+				</div>
+			</form>
+
+		</div>
+{# 		{% for entry in craft.entries.section('blog').find() %}
+			<article>
+				<h3>{{ entry.title }}</h3>
+				<p class="small">Posted on {{ entry.postDate.format('F d, Y') }}</p>
+				{{ entry.body.getPage(1) }}
+				{# <p><a href="{{ entry.url }}">Continue reading</a></p>
+			</article>
+			<hr class="clear" />
+		{% endfor %}
+ #}
+		{% paginate craft.entries.section('blog').limit(10) as entriesOnPage %}
+
+		    {% for entry in entriesOnPage %}
+		        <article>
+					<h3>{{ entry.title }}</h3>
+					<p class="small">Posted on {{ entry.postDate.format('F d, Y') }}</p>
+					{{ entry.body.getPage(1) }}
+					{# <p><a href="{{ entry.url }}">Continue reading</a></p> #}
+				</article>
+				<hr class="clear" />
+		    {% endfor %}
+
+		    <div class="text-center">
+			    {% if paginate.prevUrl %}<a href="{{ paginate.prevUrl }}">&lt; Previous Page</a>&nbsp;&nbsp;&nbsp;&nbsp;{% endif %}
+			    {% if paginate.nextUrl %}&nbsp;&nbsp;&nbsp;&nbsp;<a href="{{ paginate.nextUrl }}">Next Page &gt;</a>{% endif %}
+		    </div>
+
+		{% endpaginate %}
+	</div>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% macro errorList(errors) %}
+    {% if errors %}
+        <ul class="errors">
+            {% for error in errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endmacro %}
+
+{% from _self import errorList %}
+<div class="hidden green-well" id="product-contact-form-notice"></div>
+<form id="product-contact-form" method="post" action="" accept-charset="UTF-8">
+    {{ getCsrfInput() }}
+    <input type="hidden" name="action" value="contactForm/sendMessage">
+
+    <label for="fromName">Name</label><br/>
+    <input id="fromName" type="text" name="fromName" value="{% if message is defined %}{{ message.fromName }}{% endif %}"><br/>
+    {% if message is defined %}{{ errorList(message.getErrors('fromName')) }}<br/>{% endif %}
+
+    <label for="fromEmail">Email</label><br/>
+    <input id="fromEmail" type="text" name="fromEmail" value="{% if message is defined %}{{ message.fromEmail }}{% endif %}"><br/>
+    {% if message is defined %}{{ errorList(message.getErrors('fromEmail')) }}<br/>{% endif %}
+
+    <label for="fromZip">Zip Code</label><br/>
+    <input id="fromZip" type="text" name="message[fromZip][]" value=""><br/>
+    {% if message is defined %}{{ errorList(message.getErrors('Zip')) }}<br/>{% endif %}
+
+    <input type="text" name="address" style="display: none"/>
+
+    <input id="subject" type="hidden" name="subject" value="Website contact form submission">
+
+    <label for="message">Comment</label><br/>
+    <textarea rows="5" cols="40" id="message" name="message[body]">{% if message is defined %}{{ message.message }}{% endif %}</textarea><br/>
+    {% if message is defined %}{{ errorList(message.getErrors('message')) }}<br/>{% endif %}
+    <input type="checkbox" name="message[Email Opt In]" value="yes" checked="checked"/> Let's Keep in Touch. Notify me of new products and Zoot news.<br/>
+    <br/>
+    <input type="submit" value="Send">
+</form>

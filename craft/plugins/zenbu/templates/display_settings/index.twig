@@ -1,0 +1,103 @@
+{% extends "_layouts/cp" %}
+{% import "_includes/forms" as forms %}
+
+{% set title = 'Display Settings' %}
+
+{# Breadcrumbs #}
+{% set crumbs = [
+    { label: nav_label|t, url: url('zenbu') },
+    { label: "Display Settings"|t, url: url('zenbu/settings') }
+] %}
+
+{# Tabs #}
+{% set sectionId = craft.request.getParam('sectionId') %}
+{% set entryTypeId = craft.request.getParam('entryTypeId') %}
+{% set sectionIdParam = sectionId ? '?sectionId=' ~ sectionId : '' %}
+{% set entryTypeIdParam = entryTypeId ? '&entryTypeId=' ~ entryTypeId : '' %}
+{% set tabs = {
+    main: { label: "Entry Listing"|t, url: url('zenbu') ~ sectionIdParam ~ entryTypeIdParam },
+    displaySettings:    { label: "Display Settings"|t, url: url('zenbu/settings') ~ sectionIdParam ~ entryTypeIdParam },
+    manageSavedSearches:    { label: "Manage Saved Searches"|t, url: url('zenbu/searches') },
+} %}
+{% set selectedTab = 'displaySettings' %}
+
+{% set content %}
+	<form action="{{ url('zenbu/settings') }}">
+		{{ getCsrfInput() }}
+		<img src="{{ resourceUrl('images/spinner.gif') }}" alt="" style="display: none" class="loading right">
+
+		<div class="filters">
+		{{ forms.select({
+	        id: 'section_select',
+	        class: 'section_select',
+	        name: 'sectionId',
+	        options: section_dropdown_options,
+	        value: sectionId,
+	    }) }}
+
+	    {% for sectionId, entryType in entryType_dropdown_options %}
+	        {{ forms.select({
+	            class: 'entryType_select sectionId_' ~ sectionId,
+	            name: 'entryTypeId',
+	            options: entryType,
+	            value: entryTypeId,
+	        }) }}
+	    {% endfor %}
+	    </div>
+	</form>
+
+
+	<hr>
+
+    <form action="{{ url('zenbu/settings/save') }}" method="post">
+		{{ getCsrfInput() }}
+    	<div class="resultArea">
+            {% include "zenbu/display_settings/settings" %}
+        </div>
+
+		{% if currentUser.can('canCopyZenbuDisplaySettingsToUsers') and CraftEdition == 2 %}
+        <div class="copyToGroups">
+        	{% if userGroups | length >= 1 %}
+        		<hr />
+        		<div class="field">
+		        	<strong>{{"Apply the above settings to members of the following selected groups:"|t}}</strong>
+		        	<div class="instructions">{{"WARNING! This overwrites any previous display settings users in selected groups may have."|t}}</div>
+		        	<ul>
+		        	{% for group in userGroups %}
+		        	    <li>
+		        	    {{ forms.checkbox({
+							on: 	    false,
+							small: 		false,
+							name:       'applyTo[' ~ group.id ~ ']',
+							label:      group.name
+						}) }}
+		        	    </li>
+		        	{% endfor %}
+		        	</ul>
+	        	</div>
+	        {% endif %}
+	        <hr />
+			<div class="field">
+	        {{ forms.checkbox({
+				on: 	    false,
+				small: 		false,
+				name:       'applyTo[all]',
+				label:      'Apply the above settings to <strong>all</strong> members of the site'|t
+			}) }}
+				<div class="instructions">{{"WARNING! This overwrites any previous display settings any user may have."|t}}</div>
+			</div>
+        </div>
+        {% endif %}
+
+		<div class="buttons">
+			<button type="submit" class="btn submit"><span>{{"Save Settings"|t}}</span><span style="display: none">{{"Saving"|t}} <i class="fa fa-spinner fa-pulse"></i></span></button>
+        </div>
+    </form>
+
+
+	<script type="text/javascript">
+        window.csrfTokenName = "{{ craft.config.csrfTokenName|e('js') }}";
+        window.csrfTokenValue = "{{ craft.request.csrfToken|e('js') }}";
+    </script>
+
+{% endset %}

@@ -1,0 +1,212 @@
+@import '../bourbon/bourbon';
+@import '../bourbon/neat-helpers'; // or '../neat/neat-helpers' when not in Rails
+@import '../bourbon/grid/row';
+@import '../bourbon/grid/shift';
+@import '../bourbon/grid/omega';
+@import '../bourbon/grid/span-columns';
+
+
+// Neat Overrides
+// $column: 90px;
+// $gutter: 30px;
+$grid-columns: 12;
+$max-width: em(1300);
+
+// Neat Breakpoints
+$medium-screen-width: 640px;
+$large-screen-width: 960px;
+$x-large-screen-width: 1200px;
+
+$small-screen: new-breakpoint(max-width em($medium-screen-width));
+$medium-screen: new-breakpoint(min-width em($medium-screen-width + 1) max-width em($large-screen-width));
+$medium-screen-down: new-breakpoint(max-width em($large-screen-width));
+$large-screen: new-breakpoint(min-width em($large-screen-width + 1));
+$x-large-screen: new-breakpoint(min-width em($x-large-screen-width + 1));
+$x-large-screen-down: new-breakpoint(max-width em($x-large-screen-width + 1));
+
+.container {
+	padding: 0 40px;
+
+	@include media($small-screen) {
+		padding: 0 20px;
+	}
+
+	@include outer-container;
+}
+
+.row {
+	@include row();
+}
+
+.col-1 {
+	@include span-columns(1);
+	@include media($medium-screen-down) {
+		@include span-columns(12);
+	}
+}
+.col-2 {
+	@include span-columns(2);
+	@include media($medium-screen-down) {
+		@include span-columns(12);
+	}
+}
+.col-3 {
+	@include span-columns(3);
+	@include media($medium-screen-down) {
+		@include span-columns(12);
+	}
+}
+.col-4 {
+	@include span-columns(4);
+	@include media($medium-screen-down) {
+		@include span-columns(12);
+	}
+}
+.col-5 {
+	@include span-columns(5);
+	@include media($medium-screen-down) {
+		@include span-columns(12);
+	}
+}
+.col-6 {
+	@include span-columns(6);
+	@include media($medium-screen-down) {
+		@include span-columns(12);
+	}
+}
+.col-7 {
+	@include span-columns(7);
+	@include media($medium-screen-down) {
+		@include span-columns(12);
+	}
+}
+.col-8 {
+	@include span-columns(8);
+	@include media($medium-screen-down) {
+		@include span-columns(12);
+	}
+}
+.col-9 {
+	@include span-columns(9);
+	@include media($medium-screen-down) {
+		@include span-columns(12);
+	}
+}
+.col-10 {
+	@include span-columns(10);
+	@include media($medium-screen-down) {
+		@include span-columns(12);
+	}
+}
+.col-11 {
+	@include span-columns(11);
+	@include media($medium-screen-down) {
+		@include span-columns(12);
+	}
+}
+.col-12 {
+	@include span-columns(12);
+}
+
+.shift-1 {
+	@include shift(1);
+	@include media($medium-screen-down) {
+		@include shift(0);
+	}
+}
+.shift-2 {
+	@include shift(2);
+	@include media($medium-screen-down) {
+		@include shift(0);
+	}
+}
+.shift-3 {
+	@include shift(3);
+	@include media($medium-screen-down) {
+		@include shift(0);
+	}
+}
+.shift-4 {
+	@include shift(4);
+	@include media($medium-screen-down) {
+		@include shift(0);
+	}
+}
+.shift-5 {
+	@include shift(5);
+	@include media($medium-screen-down) {
+		@include shift(0);
+	}
+}
+.shift-6 {
+	@include shift(6);
+	@include media($medium-screen-down) {
+		@include shift(0);
+	}
+}
+.shift-7 {
+	@include shift(7);
+	@include media($medium-screen-down) {
+		@include shift(0);
+	}
+}
+.shift-8 {
+	@include shift(8);
+	@include media($medium-screen-down) {
+		@include shift(0);
+	}
+}
+.shift-9 {
+	@include shift(9);
+	@include media($medium-screen-down) {
+		@include shift(0);
+	}
+}
+.shift-10 {
+	@include shift(10);
+	@include media($medium-screen-down) {
+		@include shift(0);
+	}
+}
+.shift-11 {
+	@include shift(11);
+	@include media($medium-screen-down) {
+		@include shift(0);
+	}
+}
+
+.grid-4 {
+	@include span-columns(4);
+	@include omega(3);
+}
+.grid-3 {
+	@include media($small-screen) {
+		@include span-columns(12);
+		@include omega(1);
+	}
+	@include media($medium-screen) {
+		@include span-columns(6);
+		@include omega(2);
+	}
+	@include media($large-screen) {
+		@include span-columns(3);
+		@include omega(4);
+	}
+}
+.grid-2 {
+	@include span-columns(2);
+	@include omega(6);
+}
+
+.omega {
+	@include omega();
+}
+
+.nav-grid {
+	float: left;
+}
+.nav-grid-2 { width: 50%; }
+.nav-grid-3 { width: 33.3%; }
+.nav-grid-4 { width: 25%; }
+.nav-grid-5 { width: 20%; }
+.nav-grid-6 { width: 16.666%; }

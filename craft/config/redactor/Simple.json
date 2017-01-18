@@ -1,0 +1,4 @@
+{
+	buttons: ['html','bold', 'italic'],
+	toolbarFixedBox: true
+}

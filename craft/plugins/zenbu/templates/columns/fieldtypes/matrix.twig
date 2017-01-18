@@ -1,0 +1,79 @@
+{#
+//    ----------------------------------------
+//      Matrix
+//    ----------------------------------------
+#}
+{% set theMatrix %}
+    {% set useModal = (settings.settings[col.id].useModal is defined and settings.settings[col.id].useModal is not empty) or settings.settings[col.id].useModal is not defined ? true : false %}
+    {% set viewHeight = (settings.settings[col.id].viewHeight is defined and settings.settings[col.id].viewHeight is not empty) and useModal == false ? 'max-height:' ~ settings.settings[col.id].viewHeight ~ 'px' : 'max-height: 100%' %}
+    <div class="{{ viewHeight is not empty ? 'matrixField' : ''}}" style="{{viewHeight}}">
+    {% set totalMatrixBlocks = entry[col.handle]|length %}
+    {% for matrixBlock in entry[col.handle] %}
+        <div class="matrixblock">
+            <div class="titlebar">{{matrixBlock.type.name}}</div>
+            <div class="fields">
+                {% for matrixField in matrixBlock.getFieldLayout().getFields() %}
+                    <div class="heading"><strong>{{matrixField.getField().name}}</strong> {#({{matrixField.getField().type}})#}</div>
+                    {% if matrixField.getField().type == 'Assets' %}
+                        {#
+                        //    ----------------------------------------
+                        //      Matrix => Assets
+                        //    ----------------------------------------
+                        #}
+                        {% set assets = craft.assets.id(matrixBlock[matrixField.getField().handle].ids) %}
+                        {% for asset in assets %}
+                            {% set transform = {
+                                mode: 'crop',
+                                width: 30,
+                                height: 30
+                            } %}
+                            {% do asset.setTransform(transform) %}
+                            <img src="{{asset.url}}" alt="{{ asset.title }}" />
+                        {% endfor %}
+                    {% elseif matrixField.getField().type == 'Entries' %}
+                        {#
+                        //    ----------------------------------------
+                        //      Matrix => Entries
+                        //    ----------------------------------------
+                        #}
+                        {% set relEntries = craft.entries.id(matrixBlock[matrixField.getField().handle].ids) %}
+                        <ul>
+                        {% for relEntry in relEntries %}
+                            <li><a href="{{relEntry.getCpEditUrl()}}">{{relEntry.getTitle()}}</a></li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        {#
+                        //    ----------------------------------------
+                        //      Matrix => Others
+                        //    ----------------------------------------
+                        #}
+                        {% if matrixBlock[matrixField.getField().handle] is iterable %}
+                            {#
+                                Iterable data within a Matrix Block Element:
+                                Show a var dump for now. Better than an error.
+                            #}
+                            <em>{{"Displaying Raw Data for Fieldtype: "|t}}{{matrixField.getField().type}}</em>
+                            {{matrixBlock[matrixField.getField().handle]|zenbuDump}}
+                        {% else %}
+                            {{matrixBlock[matrixField.getField().handle]}}
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+{% endset %}
+
+{% if useModal %}
+    {% if totalMatrixBlocks > 0 %}
+        <a href="#" class="showModal">{{"Show"|t}}</a>
+        <div class="outerModal" style="display: none">
+            <div class="modal">
+               {{ theMatrix }}
+            </div>
+        </div>
+    {% endif %}
+{% else %}
+    {{ theMatrix }}
+{% endif %}

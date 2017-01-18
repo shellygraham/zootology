@@ -1,0 +1,8 @@
+{
+	"name": "Zenbu for Craft",
+	"autoload": {
+		"psr-4": {
+			"Zenbu\\": ""
+		}
+	}
+}

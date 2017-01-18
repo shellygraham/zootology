@@ -1,0 +1,65 @@
+{% extends "_layout" %}
+
+{% set metaDescription = entry.metaDescription %}
+{% set seoPageTitle = entry.seoPageTitle %}
+{% set title = "Press" %}
+
+{% block content %}
+	<div class="breadcrumb-container">
+		<div class="container">
+			<ul class="breadcrumbs">
+				<li><a class="inverse" href="/">home</a></li>
+				<li>zoot press</li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="container big-pad-bottom press">
+		
+		{% if entry.pressIntro %}
+		<div class="gray-well">
+			{{ entry.pressIntro }}
+		</div>
+		{% endif %}
+
+{# 		{% for entry in craft.entries.section('press').find() %}
+			<article>
+				{% if entry.mainImage %}
+				<div class="text-center col-4">
+					<img src="{{ entry.mainImage.first.url }}" alt=""/>
+				</div>
+				<div class="text-center col-8 omega">
+				{% endif %}
+				<h3>{{ entry.title }}</h3>
+				<p class="small">Posted on {{ entry.postDate.format('F d, Y') }}</p>
+				{{ entry.pressExcerpt }}
+				{# <p><a href="{{ entry.url }}">Continue reading</a></p>
+			</article>
+			<hr class="clear" />
+		{% endfor %}
+ #}
+		{% paginate craft.entries.section('press').limit(10) as entriesOnPage %}
+
+		    {% for entry in entriesOnPage %}
+		        <article>
+					{% if entry.mainImage %}
+					<div class="text-center col-4">
+						<img src="{{ entry.mainImage.first.url }}" alt=""/>
+					</div>
+					{% endif %}
+					<h3>{{ entry.title }}</h3>
+					<p class="small">Posted on {{ entry.postDate.format('F d, Y') }}</p>
+					{{ entry.pressExcerpt }}
+					 <p><a href="{{ entry.url }}">Continue reading</a></p> 
+				</article>
+				<hr class="clear" />
+		    {% endfor %}
+
+		    <div class="text-center">
+			    {% if paginate.prevUrl %}<a href="{{ paginate.prevUrl }}">&lt; Previous Page</a>&nbsp;&nbsp;&nbsp;&nbsp;{% endif %}
+			    {% if paginate.nextUrl %}&nbsp;&nbsp;&nbsp;&nbsp;<a href="{{ paginate.nextUrl }}">Next Page &gt;</a>{% endif %}
+		    </div>
+
+		{% endpaginate %}
+	</div>
+{% endblock %}

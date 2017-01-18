@@ -1,0 +1,22 @@
+<div class="text-separator cats"><h6>{{ cat.title }}</h6>{{ cat.categoryPageContent }}</div>
+
+<div class="row big-pad-bottom">
+  {% for product in craft.entries.section('products').relatedTo(cat) %}
+
+  <div class="grid-4">
+    <a href="{{ url('products/' ~ category.slug ~ '/' ~ product.slug) }}" class="inverse">
+      {% if product.productImage | length %}
+      <img src="{{ product.productImage.first.url }}" alt=""/>
+      {% endif %}
+      <p class="text-center">{{ product.title }} <span class="icon-right-arrow"></span></p>
+      <div class="states-avail"><p>Available in:</p>
+          <ul>
+            {% for option in product.availableStates %}
+            <li>{{ option.label }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+    </a>
+  </div>
+  {% endfor %}
+</div>

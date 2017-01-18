@@ -1,0 +1,9 @@
+{#
+//    ----------------------------------------
+//      Categories
+//    ----------------------------------------
+#}
+{% for category in entry[col.handle] %}
+    {{category.title}}{{ not loop.last ? ', ' }}
+{% endfor %}
+{{entry[col.handle] | length == 0 ? '-'}}

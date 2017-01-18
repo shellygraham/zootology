@@ -1,0 +1,48 @@
+{% macro errorList(errors) %}
+    {% if errors %}
+        <ul class="errors">
+            {% for error in errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endmacro %}
+
+{% from _self import errorList %}
+<div class="hidden green-well" id="product-contact-form-notice"></div>
+<form id="product-contact-form" method="post" action="" accept-charset="UTF-8">
+    {{ getCsrfInput() }}
+    <input type="hidden" name="action" value="contactForm/sendMessage">
+
+    <label for="fromName">Name</label><br/>
+    <input id="fromName" type="text" name="fromName" value="{% if message is defined %}{{ message.fromName }}{% endif %}"><br/>
+    {% if message is defined %}{{ errorList(message.getErrors('fromName')) }}<br/>{% endif %}
+
+    <label for="storeName">Store Name</label><br/>
+    <input id="storeName" type="text" name="message[Store Name]" value=""><br/>
+    {% if message is defined %}{{ errorList(message.getErrors('storeName')) }}<br/>{% endif %}
+
+    <label for="storeLocation">Store Location</label><br/>
+    <input id="storeLocation" type="radio" name="message[Location][]" value="Washington">Washington
+    <input id="storeLocation" type="radio" name="message[Location][]" value="Colorado">Colorado<br/><br/>
+
+    <label for="fromEmail">Email</label><br/>
+    <input id="fromEmail" type="text" name="fromEmail" value="{% if message is defined %}{{ message.fromEmail }}{% endif %}"><br/>
+    {% if message is defined %}{{ errorList(message.getErrors('fromEmail')) }}<br/>{% endif %}
+
+    <label for="fromPhone">Phone</label><br/>
+    <input id="fromPhone" type="text" name="message[Phone]" value=""><br/>
+    {% if message is defined %}{{ errorList(message.getErrors('fromPhone')) }}<br/>{% endif %}
+
+    <input type="text" name="address" style="display: none"/>
+
+    <input id="subject" type="hidden" name="subject" value="Retailer Information Contact">
+
+    <label for="message">Comment</label><br/>
+    <textarea rows="5" cols="40" id="message" name="message[body]">{% if message is defined %}{{ message.message }}{% endif %}</textarea><br/>
+    {% if message is defined %}{{ errorList(message.getErrors('message')) }}<br/>{% endif %}
+    <input type="checkbox" name="message[Email Opt In]" value="yes" checked="checked"/> Let's Keep in Touch. Notify me of new products and Zoot news.<br/>
+    <br/>
+    <input type="submit" value="Send">
+  
+</form>

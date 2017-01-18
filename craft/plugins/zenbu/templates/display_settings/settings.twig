@@ -1,0 +1,107 @@
+{% import "_includes/forms" as forms %}
+
+{% set message = craft.session.getFlash('yourVariable') %}
+{{message}}
+
+<input type="hidden" name="sectionId" value="{{ craft.request.getParam('sectionId') }}" />
+<input type="hidden" name="entryTypeId" value="{{ craft.request.getParam('entryTypeId') }}" />
+
+<table class="data fullwidth settingsTable">
+	<thead>
+	    <tr>
+	    	<th></th>
+	        <th width="20%">{{"Field"|t}}</th>
+	        <th width="10%">{{"Field Type"|t}}</th>
+	        <th width="1%">{{"Order"|t}}</th>
+	        <th width="1%">{{"Show"|t}}</th>
+	        <th>{{"Settings"|t}}</th>
+	    </tr>
+    </thead>
+
+	{% set c = 0 %}
+	<tbody>
+	{% for handle, field in rows %}
+
+		<tr>
+			<td width="1%"><a class="move icon" title="Reorder" role="button">&nbsp;</a></td>
+			<td>{{field.name | default(field)}}</td>
+			<td>{{field.type | default('-')}}</td>
+			<td class="order">
+				{{c}}
+			</td>
+			<td class="not-sortable">
+				{% set show = false %}
+				{% for setting in settings.fields %}
+					{% if (setting.fieldType == handle or setting.fieldId == handle) and (setting.show is defined and setting.show == 1) %}
+						{% set show = true %}
+					{% endif %}
+				{% endfor %}
+
+	            {{ forms.lightswitchField({
+					on: 	    show,
+					small: 		false,
+					name:       'field[' ~ c ~ '][' ~ handle ~ ']',
+				}) }}
+			</td>
+			<td class="not-sortable">
+				{# <input type="hidden" name="fieldsettings[][{{handle}}]" value=""> #}
+
+				{% if handle == 'postDate' %}
+					<label for="postDateFormat">{{"Date format"|t}}</label><br /> <input type="text" id="postDateFormat" class="text" name="fieldsettings[{{handle}}][dateFormat]" value="{{settings.settings[handle].dateFormat is defined ? settings.settings[handle].dateFormat : ''}}" placeholder="Y-m-d" />
+				{% endif %}
+
+				{% if handle == 'status' %}
+					<label for="statusStyle">{{"Status style"|t}}</label><br />
+					{{ forms.select({
+						id: 'statusStyle',
+				        name: 'fieldsettings[' ~ handle~ '][statusStyle]',
+				        options: { dot: "Dot"|t, label: "Label"|t, dot_label: "Dot and Label"|t},
+				        value: settings.settings[handle].statusStyle is defined ? settings.settings[handle].statusStyle : 'dot',
+				    }) }}
+				{% endif %}
+
+				{% if field.type == 'PlainText' %}
+					<div class="field has-instructions">
+						<label for="charLimit">{{"Character limit display"|t}}</label><br /> <input type="number" min="0" id="charLimit" class="text" name="fieldsettings[{{handle}}][charLimit]" value="{{settings.settings[handle].charLimit is defined ? settings.settings[handle].charLimit : ''}}" placeholder="eg. 50" />
+					</div>
+				{% endif %}
+
+				{% if field.type == 'RichText' %}
+					<div class="field has-instructions">
+						<label for="charLimit">{{"Character limit display"|t}}</label><br /> <input type="number" min="0" id="charLimit" class="text" name="fieldsettings[{{handle}}][charLimit]" value="{{settings.settings[handle].charLimit is defined ? settings.settings[handle].charLimit : ''}}" placeholder="eg. 50" />
+						<div class="instructions"><p>{{"Note: To avoid issues with truncated HTML, content will be converted to plain text before truncation."|t}}</p></div>
+					</div>
+				{% endif %}
+
+				{% if field.type == 'Matrix' %}
+					<div class="field has-instructions">
+						{{ forms.checkbox({
+							checked: (settings.settings[handle].useModal is defined and settings.settings[handle].useModal == 1) or settings.settings[handle].useModal is not defined ? true : false,
+					        name: 'fieldsettings[' ~ handle~ '][useModal]',
+							label: "Show Matrix in Modal Window"|t,
+					    }) }}
+						<div class="instructions"><p>{{"Displays a link which opens a modal window containing the Matrix field, instead of displaying the Matrix field inline."|t}}</p></div>
+					    <br />
+						<label for="viewHeight">{{"Max view height"|t}}</label><br />
+						<input type="number" min="0" id="viewHeight" class="text" name="fieldsettings[{{handle}}][viewHeight]" value="{{settings.settings[handle].viewHeight is defined ? settings.settings[handle].viewHeight : ''}}" placeholder="eg. 500" /> {{"px"|t}}
+						<div class="instructions"><p>{{"The maximum height of the viewable area for Matrix fields. Matrix data higher than the max view height will be scrollable. Set to empty for full height, always."|t}}</p></div>
+					</div>
+				{% endif %}
+
+				{% if field.type == 'Assets' %}
+					<div class="field has-instructions">
+						{{"Thumbnail dimensions"}}:<br />
+						<input type="number" min="0" id="thumbWidth" class="text" name="fieldsettings[{{handle}}][thumbWidth]" value="{{settings.settings[handle].thumbWidth is defined ? settings.settings[handle].thumbWidth : ''}}" placeholder="Width eg. 50 (default)" /> x
+						<input type="number" min="0" id="thumbHeight" class="text" name="fieldsettings[{{handle}}][thumbHeight]" value="{{settings.settings[handle].thumbHeight is defined ? settings.settings[handle].thumbHeight : ''}}" placeholder="Height, eg. 50 (default)" /> {{"px"|t}}
+					</div>
+				{% endif %}
+
+
+
+
+			</td>
+		</tr>
+		{% set c = c + 1 %}
+	{% endfor %}
+	</tbody>
+</table>

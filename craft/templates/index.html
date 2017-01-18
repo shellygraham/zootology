@@ -1,0 +1,296 @@
+{% extends "_layout" %}
+{% set metaDescription = entry.metaDescription %}
+{% set seoPageTitle = entry.seoPageTitle %}
+{% set title = entry.title %}
+{% set data = craft.geo.info(false) %}
+{% set state = craft.geo.info.region_name %}
+
+{% set headerClass = "home-header" %}
+
+{% block slider %}
+
+{% if entry.sliderGeolocationFeature == "preview" %}
+	<div class="flexslider">Washington
+		<ul class="slides">
+
+				{% for slide in entry.sliderSeattle %}
+				{# {% set slide = entry.sliderSeattle[1] %} #}
+					<li>
+					{% switch slide.slideSeattleLink.type %}
+					    {% case "entry" %}
+					        <a href="{{ slide.slideSeattleLink.entry.url }}">
+					    {% case "custom" %}
+					        <a href="{{ slide.slideSeattleLink.custom }}">
+					{% endswitch %}
+					<img class="slide-bg" src="{{ slide.slideSeattleImage.first.url }}" /></a></li>
+				{% endfor %}
+		</ul>
+	</div>
+	<div class="flexslider">Colorado
+		<ul class="slides">	
+					{% for slide in entry.sliderColorado %}
+					{# {% set slide = entry.sliderColorado[1] %} #}
+						<li>
+						{% switch slide.slideColoradoLink.type %}
+						    {% case "entry" %}
+						        <a href="{{ slide.slideColoradoLink.entry.url }}">
+						    {% case "custom" %}
+						        <a href="{{ slide.slideColoradoLink.custom }}">
+						{% endswitch %}
+						<img class="slide-bg" src="{{ slide.slideColoradoImage.first.url }}" /></a></li>
+					{% endfor %}
+		</ul>
+	</div>
+	<div class="flexslider">All other states
+		<ul class="slides">					
+				{% for slide in entry.slider %}
+				{# {% set slide = entry.slider[1] %} #}
+					<li>
+					{% switch slide.slideLink.type %}
+					    {% case "entry" %}
+					        <a href="{{ slide.slideLink.entry.url }}">
+					    {% case "custom" %}
+					        <a href="{{ slide.slideLink.custom }}">
+					{% endswitch %}
+					<img class="slide-bg" src="{{ slide.slideImage.first.url }}" /></a></li>
+				{% endfor %}
+
+
+		</ul>
+		<img id="z-icon" src="/assets/img/theme/z-icon.gif" alt="" />
+	</div>
+{% else %}
+
+
+
+	<div class="flexslider">
+		<ul class="slides">
+
+			{% if state == "Washington" %}
+				{% for slide in entry.sliderSeattle %}
+				{# {% set slide = entry.sliderSeattle[1] %} #}
+					<li>
+					{% switch slide.slideSeattleLink.type %}
+					    {% case "entry" %}
+					        <a href="{{ slide.slideSeattleLink.entry.url }}">
+					    {% case "custom" %}
+					        <a href="{{ slide.slideSeattleLink.custom }}">
+					{% endswitch %}
+					<img class="slide-bg" src="{{ slide.slideSeattleImage.first.url }}" /></a></li>
+				{% endfor %}
+				{% elseif state == "Colorado" %}
+	
+					{% for slide in entry.sliderColorado %}
+					{# {% set slide = entry.sliderColorado[1] %} #}
+						<li>
+						{% switch slide.slideColoradoLink.type %}
+						    {% case "entry" %}
+						        <a href="{{ slide.slideColoradoLink.entry.url }}">
+						    {% case "custom" %}
+						        <a href="{{ slide.slideColoradoLink.custom }}">
+						{% endswitch %}
+						<img class="slide-bg" src="{{ slide.slideColoradoImage.first.url }}" /></a></li>
+					{% endfor %}
+				{% else %}				
+					
+				{% for slide in entry.slider %}
+				{# {% set slide = entry.slider[1] %} #}
+					<li>
+					{% switch slide.slideLink.type %}
+					    {% case "entry" %}
+					        <a href="{{ slide.slideLink.entry.url }}">
+					    {% case "custom" %}
+					        <a href="{{ slide.slideLink.custom }}">
+					{% endswitch %}
+					<img class="slide-bg" src="{{ slide.slideImage.first.url }}" /></a></li>
+				{% endfor %}
+			{% endif %}
+
+
+		</ul>
+		<img id="z-icon" src="/assets/img/theme/z-icon.gif" alt="" />
+	</div>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+
+	<section class="parallax" style="background-image: url('{{ entry.parallax2Image.first.url }}');"
+		data-bottom-top="background-position: 50% 100px;"
+        data-top-bottom="background-position: 50% -100px;">
+		<div class="content container vcenter">
+			<h1>{{ entry.parallax2Headline | raw }}</h1>
+	    </div>
+	</section>
+
+	<section class="container clip big-pad-top">
+		<div class="show-mobile text-center">
+			<img src="/assets/img/content/zootrocks-mobile.png" alt="zootrocks" />
+		</div>
+		<div class="hide-mobile col-8" id="tin-animation">
+			<div id="box-holder">
+				<img src="/assets/img/content/rocks-box.png" alt=""/>
+			</div>
+			<div id="tin-lid" class="hide-large"
+				data--80p-bottom-top="left: 330px; top: 140px; transform: rotate(20deg);"
+				data--20p-bottom-top="left: 230px; top: 140px; transform: rotate(-2deg);"
+				data-bottom-top="left: 230px; top: 140px; transform: rotate(0deg);"
+				data-anchor-target="#tin-animation">
+				<img src="/assets/img/content/ZootRocks-tin-lid.png" alt=""/>
+			</div>
+			<div id="tin-base" class="hide-large">
+				<img src="/assets/img/content/ZootRocks-tin-inside.png" alt=""/>
+			</div>
+			<div id="tin-lid" class="show-large"
+				data--80p-bottom-top="left: 180px; top: 140px; transform: rotate(20deg);"
+				data--20p-bottom-top="left: 120px; top: 140px; transform: rotate(-2deg);"
+				data-bottom-top="left: 120px; top: 140px; transform: rotate(0deg);"
+				data-anchor-target="#tin-animation">
+				<img src="/assets/img/content/ZootRocks-tin-lid.png" alt=""/>
+			</div>
+			<div id="tin-base" class="show-large">
+				<img src="/assets/img/content/ZootRocks-tin-inside.png" alt=""/>
+			</div>
+		</div>
+		<div class="col-4 shift-8 big-pad-top big-pad-bottom bigger">
+			{{ entry.animation2Content }}
+			<p class="pad-top"><a class="big-arrow" href="/products/zootrocks">{{ entry.animation2ButtonText }}</a></p>
+		</div>
+	</section>
+
+	<section class="parallax" style="background-image: url('{{ entry.parallax1Image.first.url }}');"
+		data-bottom-top="background-position: 50% 100px;"
+        data-top-bottom="background-position: 50% -100px;">
+		<div class="content container vcenter">
+			<h1>{{ entry.parallax1Headline | raw }}</h1>
+	    </div>
+	</section>
+
+	<section class="container big-pad-top clip">
+		<div class="show-mobile text-center" style="margin-top: 20px;">
+			<img src="/assets/img/content/zootblast-mobile.jpg" alt="zootblast" />
+		</div>
+		<div class="col-4 big-pad-top bigger">
+			{{ entry.animation1Content }}
+		</div>
+		<div class="hide-mobile col-4 big-pad-top big-pad-bottom" id="blast-animation">
+			<div id="blast-cap"
+				data--70p-bottom-top="left: 100px; top: -20px; transform: rotate(10deg);"
+				data--30p-bottom-top="left: 0px; top: 0px; transform: rotate(0deg);"
+				data--10p-bottom-top="left: 0px; top: 0px; transform: rotate(0deg);"
+				data-anchor-target="#blast-animation">
+				<img src="/assets/img/content/blast-bottle-cap.png" alt=""/>
+			</div>
+			<div id="blast-base">
+				<img src="/assets/img/content/blast-bottle-base.png" alt=""/>
+			</div>
+		</div>
+		<div class="col-4 pad-top big-pad-bottom">
+			<p id="blast-off-btn"><a class="big-arrow" href="/products/zootblast">{{ entry.animation1ButtonText }}</a></p>
+		</div>
+	</section>
+
+	<section class="parallax" style="background-image: url('{{ entry.parallax3Image.first.url }}');"
+		data-bottom-top="background-position: 50% 100px;"
+        data-top-bottom="background-position: 50% -100px;">
+		<div class="content container vcenter">
+			<h1>{{ entry.parallax3Headline | raw }}</h1>
+	    </div>
+	</section>
+
+	<section class="container clip big-pad-top" id="drops-section">
+		<div class="show-mobile text-center" style="margin-top: 20px;">
+			<img src="/assets/img/content/zootdrops-mobile.png" alt="zootdrops" />
+		</div>
+		<div class="col-4 big-pad-top big-pad-bottom bigger">
+			{{ entry.animation3Content }}
+			<p class="pad-top"><a class="big-arrow" href="/products/zootdrops">{{ entry.animation3ButtonText }}</a></p>
+		</div>
+		<div class="hide-mobile col-8 big-pad-top" id="drops-animation">
+			<div id="drops-cup">
+				<img src="/assets/img/content/drops-plastic-cup.jpg" alt=""/>
+			</div>
+			<div id="drops-bottle-pour"
+				data--90p-bottom-top="right: 110px; transform: rotate(30deg);"
+				data--70p-bottom-top="right: 100px; transform: rotate(25deg);"
+				data--20p-bottom-top="right: 180px; transform: rotate(-2deg);"
+				data-bottom-top="right: 180px; transform: rotate(0deg);"
+				data-anchor-target="#drops-animation">
+				<img src="/assets/img/content/zootdrops-fade.png" alt=""/>
+			</div>
+			<div id="drops-bottle">
+				<img src="/assets/img/content/zootdrops-home.png" alt=""/>
+			</div>
+		</div>
+	</section>
+
+	<section class="parallax" style="background-image: url('{{ entry.parallax4Image.first.url }}');"
+		data-bottom-top="background-position: 50% 100px;"
+        data-top-bottom="background-position: 50% -100px;">
+		<div class="content container vcenter">
+			<h1>{{ entry.parallax4Headline | raw }}</h1>
+	    </div>
+	</section>
+	
+	<section class="container clip bigger-pad-bottom">
+		<div class="show-mobile text-center" style="margin: 20px auto 0 auto;width:303px;">
+			<img src="/assets/img/content/ZootBrownies-2-pack.png" alt="zootbites" />
+		</div>
+		<div class="col-4 big-pad-top bigger hide-large">
+			{{ entry.animation4Content }}
+		</div>
+		<div class="col-4 big-pad-top big-pad-bottom bigger show-large hide-mobile">
+			{{ entry.animation4Content }}
+		</div>
+		<div class="hide-mobile col-4 big-pad-top big-pad-bottom hide-large" id="brownie-animation">
+			<div id="brownie-bite"
+				data--80p-bottom-top="left: 293px; top: -8px; transform: rotate(30deg);"
+				data--20p-bottom-top="left: 125px; top: 130px; transform: rotate(-2deg);"
+				data-bottom-top="left: 125px; top: 130px; transform: rotate(0deg);"
+				data-anchor-target="#brownie-animation">
+				<img src="/assets/img/content/Zoot-Brownie.png" alt=""/>
+			</div>
+			<div id="brownie-pkg">
+				<img src="/assets/img/content/Zoot-Brownie-Package.png" alt=""/>
+			</div>
+		</div>
+		<div class="hide-mobile col-4 big-pad-top big-pad-bottom show-large" id="brownie-animation">
+			<div id="brownie-bite"
+				data--80p-bottom-top="left: 175px; top: 50px; transform: rotate(30deg);"
+				data--20p-bottom-top="left: 75px; top: 200px; transform: rotate(-2deg);"
+				data-bottom-top="left: 75px; top: 200px; transform: rotate(0deg);"
+				data-anchor-target="#brownie-animation">
+				<img src="/assets/img/content/Zoot-Brownie.png" alt=""/>
+			</div>
+			<div id="brownie-pkg">
+				<img src="/assets/img/content/Zoot-Brownie-Package.png" alt=""/>
+			</div>
+		</div>
+		<div class="col-4 pad-top big-pad-bottom">
+			<p id="blast-off-btn"><a class="big-arrow" href="/products/zootbites">{{ entry.animation4ButtonText }}</a></p>
+		</div>
+	</section>
+
+
+<!--
+	<hr class="dotted-hr" />
+
+	<section class="container">
+		<div class="big-pad-top big-pad-bottom">
+			{{ entry.footerContent }}
+		</div>
+	</section>
+
+	<hr class="dotted-hr" />
+
+	<section class="container">
+		<div class="col-6 big-pad-top big-pad-bottom text-center">
+			<p><a class="big-arrow-blue" href="{{ entry.footerButton1Link }}">{{ entry.footerButton1Text }}</a></p>
+		</div>
+		<div class="col-6 big-pad-top big-pad-bottom text-center">
+			<p><a class="big-arrow" href="{{ entry.footerButton2Link }}">{{ entry.footerButton2Text }}</a></p>
+		</div>
+	</section>
+-->
+
+{% endblock %}

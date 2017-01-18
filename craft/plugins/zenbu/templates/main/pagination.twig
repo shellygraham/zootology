@@ -1,0 +1,47 @@
+<p>
+    {% paginate entries as entriesOnPage %}
+
+    {% set resultFrom = paginate.currentPage == 1 ? 1 : (paginate.currentPage * craft.request.getParam('limit', 10)) - (craft.request.getParam('limit', 10) - 1) %}
+    {% set resultTo = paginate.currentPage == 1 ? craft.request.getParam('limit', 10) : paginate.currentPage * craft.request.getParam('limit', 10) %}
+    {% set resultTo = resultTo > paginate.total ? paginate.total : resultTo %}
+
+    {% set totalResultsText %}
+        {% if paginate.total == 1 %}{{paginate.total}} {{'result'|t}}{% else %}{{paginate.total}} {{'results'|t}}{% endif %}
+    {% endset %}
+
+    {% if paginate.total == 0 %}
+        {{'No entries found'|t}}
+    {% else %}
+        {# {{ "{from}-{to} of {total}" | t({from: resultFrom, to: resultTo, total: totalResultsText})}} #}
+    {% endif %}
+
+    {% if paginate.totalPages > 1 %}
+        <div class="pagination">
+            <ul>
+                {% if paginate.prevUrl %}
+                    <li><a href="{{ paginate.prevUrl }}?{{ craft.request.getQueryStringWithoutPath() }}" class="pag-prev-link pagination"><i class="fa fa-angle-left"></i></a></li>
+                {% endif %}
+
+                {% for page, url in paginate.getPrevUrls(5) %}
+                    <li><a href="{{ url }}?{{ craft.request.getQueryStringWithoutPath() }}" class="pagination">{{ page }}</a></li>
+                {% endfor %}
+
+                <li class="current"><span>{{ paginate.currentPage }}</span></li>
+
+                {% for page, url in paginate.getNextUrls(5) %}
+                    <li><a href="{{ url }}?{{ craft.request.getQueryStringWithoutPath() }}" class="pagination">{{ page }}</a></li>
+                {% endfor %}
+
+                {% if paginate.nextUrl %}
+                    <li><a href="{{ paginate.nextUrl }}?{{ craft.request.getQueryStringWithoutPath() }}" class="pag-next-link pagination"><i class="fa fa-angle-right"></i></a></li>
+                {% endif %}
+            </ul>
+        </div>
+        <div class="pagination">
+            <ul>
+                <li><span class="result-text"> {{ "{from}-{to} of {total}" | t({from: resultFrom, to: resultTo, total: totalResultsText})}}</span></li>
+            </ul>
+        </div>
+        <div class="clear"></div>
+    {% endif %}
+</p>

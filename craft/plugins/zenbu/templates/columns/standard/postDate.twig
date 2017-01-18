@@ -1,0 +1,9 @@
+{#
+//    ----------------------------------------
+//      Post Date
+//    ----------------------------------------
+#}
+{% set dateFormat = settings.settings[col.handle].dateFormat is defined and settings.settings[col.handle].dateFormat is not empty ? settings.settings[col.handle].dateFormat : null %}
+{% if entry[col.handle] is not empty %}
+    {{entry[col.handle]|date(dateFormat)}}
+{% endif %}
